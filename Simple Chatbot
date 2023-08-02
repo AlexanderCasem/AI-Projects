@@ -1,0 +1,56 @@
+
+import nltk
+import random
+from nltk.chat.util import Chat, reflections
+     
+
+# Define chatbot rules (knowledge base)
+rules = {
+    'hi': ['Hello!', 'Hi there!', 'Hey!'],
+    'how are you': ['I am doing well, thanks!', 'I am fine, thanks for asking.'],
+    'bye': ['Goodbye!', 'See you later!', 'Take care!'],
+    'default': ['Sorry, but I do not understand. Please check for errors.'],
+    'thank you': ['You\'re welcome!', 'No problem!', 'It\'s my pleasure!'],
+    'terrible': ['I am sorry to hear that. Is it likely that you would visit again?'],
+    'bad': ['I apologize for the inconvenience. Is it likely that you would visit again?'],
+    'ok': ['Thank you for your feedback. Is it likely that you would visit again?'],
+    'good': ['We are glad to hear that you had a good experience! Is it likely that you would visit again?'],
+    'excellent': ['Thank you for your kind words! We strive to provide the best experience possible. Is it likely that you would visit again?'],
+    'ending':['Thank you for your response. Have a great day!', 'Your feedback is valuable to us. Thank you!', 'We appreciate your participation in the survey. Thank you!'],
+    'yese':['Thank you for your response and we hope to see you again!', 'Your feedback is valuable to us and we hope you come again soon!'],
+    'noe':['Thank you for your response and we hope you visit again!', 'Your feedback is valuable to us and we hope you change your mind!'],
+}
+
+pairs = list(rules.items())
+chat_history = []
+
+# Create a new chatbot instance
+chatbot = Chat(pairs, reflections)
+
+# Define a function to handle user inputs
+def handle_input(user_input):
+    chat_history.append(user_input)  # Remember user input in chat history
+    response = chatbot.respond(user_input)  # Get the chatbot's response
+    if response is None:
+        response = random.choice(rules['default'])  # Use default response if no rule matches
+    chat_history.append(response)  # Remember chatbot response in chat history
+    print(response)
+    if user_input.lower() in ['yes']:
+            response = random.choice(rules['yese'])
+            chat_history.append(response)  # Remember chatbot response in chat history
+            print(response)
+    if user_input.lower() in ['no']:
+            response = random.choice(rules['noe'])
+            chat_history.append(response)
+            print(response)
+
+
+# Start the conversation
+print('This is a survey and all responses will be recorded, thank you.')
+print('How was your experience with us? Terrible, bad, ok, good, or excellent.')
+
+while True:
+    user_input = input("User: ")
+    if user_input.lower() == 'quit':
+        break
+    handle_input(user_input)
